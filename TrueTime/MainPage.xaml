@@ -12,12 +12,8 @@
                HorizontalOptions="Center"
                VerticalOptions="CenterAndExpand"
                FontSize="60" />
+
         
-        <Label x:Name="LocationElem"
-               Text="Sijainti"
-               HorizontalOptions="Center"
-               VerticalOptions="CenterAndExpand"
-               FontSize="Small" />
     </StackLayout>
 
 </ContentPage>

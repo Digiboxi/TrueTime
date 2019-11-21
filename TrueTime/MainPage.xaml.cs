@@ -75,19 +75,20 @@ namespace TrueTime
                     // UI-eventit
                     Device.BeginInvokeOnMainThread(() =>
                     {
-                        LocationElem.Text = locationElemText;
+                        //LocationElem.Text = locationElemText;
+                        // Kartan käyttö: https://www.youtube.com/watch?v=7qu1MHSsZ7Q
                     });
 
                     // Ei tapeta prosessoria
-                    await Task.Delay(1000);
+                    await Task.Delay(100);
                 }
             });
         }
 
         private void UpdateClock(double longitude)
         {
-            double modifier = longitude / 360d;
-            double seconds = secondsInHalfDay * modifier;
+            double modifier = longitude / 180d; // Puolet täydestä ympyrästä, koska puolet aikavyöhykkeistä on miinusmerkkisillä asteluvuilla.
+            double seconds = secondsInHalfDay * modifier; // Samoin lasketaan myös puolen vuorokauden sekuntien perusteella, koska modifier saattaa olla negatiivinen
 
             DateTime t = DateTime.UtcNow.AddSeconds(seconds);
 
