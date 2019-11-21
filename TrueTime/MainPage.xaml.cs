@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using Android;
+using Android.Content.PM;
+using Android.Support.V4.Content;
+using Android.Support.V4.App;
+using Android.App;
 
 namespace TrueTime
 {
@@ -20,8 +24,28 @@ namespace TrueTime
         {
             InitializeComponent();
 
+            var requiredPermissions = new List<string>();
+
+            if (ContextCompat.CheckSelfPermission(Android.App.Application.Context, Manifest.Permission.AccessCoarseLocation) != (int)Permission.Granted)
+            {
+                requiredPermissions.Add(Manifest.Permission.AccessCoarseLocation);
+            }
+
+            if (ContextCompat.CheckSelfPermission(Android.App.Application.Context, Manifest.Permission.AccessFineLocation) != (int)Permission.Granted)
+            {
+                requiredPermissions.Add(Manifest.Permission.AccessFineLocation);
+            }
+
+            if (!requiredPermissions.Any())
+            {
+                RunProgram();
+            }
+        }
+
+        private void RunProgram()
+        {
             Task.Run(async () => {
-                while(true)
+                while (true)
                 {
                     string locationElemText;
 
