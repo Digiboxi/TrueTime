@@ -20,6 +20,10 @@ namespace TrueTime
     {
         const int secondsInHalfDay = 43200;
 
+        public static DateTime TrueTime { get; set; }
+        public static DateTime FalseTime { get; set; }
+        private static Location CurrentLocation { get; set; }
+
         public MainPage()
         {
             InitializeComponent();
@@ -51,17 +55,14 @@ namespace TrueTime
 
                     try
                     {
-                        var location = await Geolocation.GetLastKnownLocationAsync();
+                        UpdateClock();
 
-                        if (location != null)
+                        locationElemText = $"lat: {CurrentLocation.Latitude}, long: {CurrentLocation.Longitude}";
+
+                        Device.BeginInvokeOnMainThread(() =>
                         {
-                            locationElemText = $"lat: {location.Latitude}, long: {location.Longitude}";
-                            UpdateClock(location.Longitude);
-                        }
-                        else
-                        {
-                            locationElemText = "Ei paikkatietoa";
-                        }
+                            ClockElem.Text = TrueTime.ToString("HH:mm:ss");
+                        });
                     }
                     catch (FeatureNotEnabledException fneEx)
                     {
@@ -85,17 +86,17 @@ namespace TrueTime
             });
         }
 
-        private void UpdateClock(double longitude)
+        public async static void UpdateClock()
         {
-            double modifier = longitude / 180d; // Puolet täydestä ympyrästä, koska puolet aikavyöhykkeistä on miinusmerkkisillä asteluvuilla.
+            CurrentLocation = await Geolocation.GetLastKnownLocationAsync();
+
+            double modifier = CurrentLocation.Longitude / 180d; // Puolet täydestä ympyrästä, koska puolet aikavyöhykkeistä on miinusmerkkisillä asteluvuilla.
             double seconds = secondsInHalfDay * modifier; // Samoin lasketaan myös puolen vuorokauden sekuntien perusteella, koska modifier saattaa olla negatiivinen
 
             DateTime t = DateTime.UtcNow.AddSeconds(seconds);
 
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                ClockElem.Text = t.ToString("HH:mm:ss");
-            });
+            TrueTime = t;
+            FalseTime = DateTime.Now;
         }
     }
 }
