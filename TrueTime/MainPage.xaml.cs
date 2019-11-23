@@ -90,6 +90,10 @@ namespace TrueTime
         {
             CurrentLocation = await Geolocation.GetLastKnownLocationAsync();
 
+            if (CurrentLocation == null) {
+                CurrentLocation = new Location(100d, 26.43284427d, DateTime.Now);
+            }
+
             double modifier = CurrentLocation.Longitude / 180d; // Puolet täydestä ympyrästä, koska puolet aikavyöhykkeistä on miinusmerkkisillä asteluvuilla.
             double seconds = secondsInHalfDay * modifier; // Samoin lasketaan myös puolen vuorokauden sekuntien perusteella, koska modifier saattaa olla negatiivinen
 

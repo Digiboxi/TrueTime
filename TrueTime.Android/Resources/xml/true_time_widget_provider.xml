@@ -1,6 +1,9 @@
 ﻿<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:minWidth="144dip"
-                    android:minHeight="72dip"
+                    android:minWidth="10dip"
+                    android:minHeight="10dip"
+                    android:minResizeWidth="10dip"
+                    android:minResizeHeight="10dip"
                     android:updatePeriodMillis="1000"
+                    android:resizeMode="horizontal|vertical"
                     android:initialLayout="@layout/true_time_widget"
                     android:previewImage="@drawable/widget" />
